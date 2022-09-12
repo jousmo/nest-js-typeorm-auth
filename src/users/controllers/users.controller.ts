@@ -12,6 +12,7 @@ import { UsersService } from '../services/users.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
+import { Order } from '../entities/order.entity';
 
 @Controller('users')
 export class UsersController {
@@ -33,7 +34,7 @@ export class UsersController {
   }
 
   @Get(':id/orders')
-  findMyOrders(@Param('id', ParseIntPipe) id: number) {
+  findMyOrders(@Param('id', ParseIntPipe) id: number): Order {
     return this.usersService.findMyOrders(id);
   }
 

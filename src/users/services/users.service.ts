@@ -3,9 +3,13 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
 import { users } from '../../db/mock.db';
+import { Order } from '../entities/order.entity';
+import { ProductsService } from '../../products/services/products.service';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly productsService: ProductsService) {}
+
   #users: User[] = users;
 
   #findIndex(id: number): number {
@@ -51,7 +55,14 @@ export class UsersService {
     return true;
   }
 
-  findMyOrders(id: number) {
-    return `This action returns a #${id} my orders`;
+  findMyOrders(id: number): Order {
+    const index = this.#findIndex(id);
+    const user = this.#users[index];
+    const products = this.productsService.findAll();
+    return {
+      date: new Date(),
+      user,
+      products,
+    };
   }
 }
