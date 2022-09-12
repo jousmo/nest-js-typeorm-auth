@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { User } from '../entities/user.entity';
+import { users } from '../../db/mock.db';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  #users: User[] = users;
+
+  #findIndex(id: number): number {
+    const index = this.#users.findIndex((item) => item.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`User #${id} not found`);
+    }
+    return index;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  create(createUserDto: CreateUserDto): User {
+    const newUser: User = {
+      id: this.#users.length + 1,
+      ...createUserDto,
+    };
+
+    this.#users.push(newUser);
+    return newUser;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findAll(): User[] {
+    return this.#users;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  findOne(id: number): User {
+    const index = this.#findIndex(id);
+    return this.#users[index];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  update(id: number, updateUserDto: UpdateUserDto): User {
+    const index = this.#findIndex(id);
+    const user = this.#users[index];
+    this.#users[index] = {
+      ...user,
+      ...updateUserDto,
+    };
+    return this.#users[index];
+  }
+
+  remove(id: number): boolean {
+    const index = this.#findIndex(id);
+    this.#users.splice(index, 1);
+    return true;
+  }
+
+  findMyOrders(id: number) {
+    return `This action returns a #${id} my orders`;
   }
 }
