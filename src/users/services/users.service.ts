@@ -11,6 +11,7 @@ export class UsersService {
   constructor(
     private readonly productsService: ProductsService,
     @Inject('API_KEY') private readonly apiKey: string,
+    @Inject('USERS_LIST') private readonly userList: [],
   ) {}
 
   #users: User[] = users;
@@ -72,6 +73,7 @@ export class UsersService {
   findApiKey(): object {
     return {
       apiKey: this.apiKey,
+      userList: this.userList,
     };
   }
 }
