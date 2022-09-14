@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
@@ -10,6 +11,7 @@ import { ProductsService } from '../../products/services/products.service';
 export class UsersService {
   constructor(
     private readonly productsService: ProductsService,
+    private readonly configService: ConfigService,
     @Inject('API_KEY') private readonly apiKey: string,
     @Inject('USERS_LIST') private readonly userList: [],
   ) {}
@@ -71,9 +73,11 @@ export class UsersService {
   }
 
   findApiKey(): object {
+    const dbName = this.configService.get('DB_NAME');
     return {
       apiKey: this.apiKey,
       userList: this.userList,
+      dbName,
     };
   }
 }
