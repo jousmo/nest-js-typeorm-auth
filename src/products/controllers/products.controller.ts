@@ -8,11 +8,13 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { Product } from '../entities/product.entity';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -23,6 +25,10 @@ export class ProductsController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'List products',
+    description: 'List all products description',
+  })
   findAll(): Product[] {
     return this.productsService.findAll();
   }
