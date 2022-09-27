@@ -30,6 +30,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('/now')
+  findQueryNow(): object {
+    return this.usersService.findQueryNow();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): User {
     return this.usersService.findOne(id);

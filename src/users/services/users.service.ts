@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Client } from 'pg';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
@@ -8,7 +9,10 @@ import { ProductsService } from '../../products/services/products.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    @Inject('PG') private readonly pg: Client,
+  ) {}
 
   #users: User[] = users;
 
@@ -64,5 +68,10 @@ export class UsersService {
       user,
       products,
     };
+  }
+
+  async findQueryNow(): Promise<object> {
+    const { rows } = await this.pg.query('SELECT NOW() AS now');
+    return rows[0];
   }
 }
