@@ -1,11 +1,21 @@
 import { Module, Global } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
+import { ConfigType, ConfigModule } from '@nestjs/config';
 import { Client } from 'pg';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from '../configuration';
 
 @Global()
 @Module({
-  imports: [],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configurationService: ConfigType<typeof configuration>) => {
+        const { postgresTypeOrm } = configurationService;
+        return Object.assign({ ...postgresTypeOrm });
+      },
+      inject: [configuration.KEY],
+    }),
+  ],
   providers: [
     {
       provide: 'PG',
@@ -21,6 +31,6 @@ import configuration from '../configuration';
       inject: [configuration.KEY],
     },
   ],
-  exports: ['PG'],
+  exports: ['PG', TypeOrmModule],
 })
 export class GlobalsModule {}
