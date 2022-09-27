@@ -19,5 +19,6 @@ export default registerAs('configuration', () => ({
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     synchronize: environment !== 'production',
+    autoLoadEntities: environment !== 'production',
   },
 }));
