@@ -30,11 +30,6 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('/apikey')
-  findApiKey(): object {
-    return this.usersService.findApiKey();
-  }
-
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): User {
     return this.usersService.findOne(id);
