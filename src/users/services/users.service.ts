@@ -59,10 +59,10 @@ export class UsersService {
     return true;
   }
 
-  findMyOrders(id: number): Order {
+  async findMyOrders(id: number): Promise<Order> {
     const index = this.#findIndex(id);
     const user = this.#users[index];
-    const products = this.productsService.findAll();
+    const products = await this.productsService.findAll();
     return {
       date: new Date(),
       user,
