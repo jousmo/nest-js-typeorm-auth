@@ -33,7 +33,8 @@ export class ProductsService {
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
     const product = await this.findOne(id);
-    return this.productRepository.merge(product, updateProductDto);
+    this.productRepository.merge(product, updateProductDto);
+    return this.productRepository.save(product);
   }
 
   async remove(id: number): Promise<DeleteResult> {
