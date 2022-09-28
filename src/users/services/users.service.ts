@@ -7,26 +7,35 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
 import { Order } from '../entities/order.entity';
 import { ProductsService } from '../../products/services/products.service';
+import { CustomerService } from './customer.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly productsService: ProductsService,
+    private readonly customerService: CustomerService,
     @Inject('PG') private readonly pg: Client,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const { customerId } = createUserDto;
     const newUser = this.userRepository.create(createUserDto);
+    if (customerId) {
+      newUser.customer = await this.customerService.findOne(customerId);
+    }
     return this.userRepository.save(newUser);
   }
 
   findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['customer'] });
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['customer'],
+    });
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);
     }
