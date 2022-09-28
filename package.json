@@ -18,7 +18,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "typeorm-ts-node-esm",
+    "typeorm:migration:generate": "npm run typeorm -- migration:generate -d ./src/db/dataSource.ts ./src/db/migrations/$npm_config_name",
+    "typeorm:migration:create": "npm run typeorm -- migration:create ./src/db/migrations/$npm_config_name",
+    "typeorm:migration:run": "npm run typeorm -- migration:run -d ./src/db/dataSource.ts",
+    "typeorm:migration:revert": "npm run typeorm -- migration:revert -d ./src/db/dataSource.ts",
+    "typeorm:migration:show": "npm run typeorm -- migration:show -d ./src/db/dataSource.ts"
   },
   "dependencies": {
     "@nestjs/axios": "^0.1.0",
