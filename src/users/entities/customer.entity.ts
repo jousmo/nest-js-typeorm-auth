@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../globals/entities/base.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Customer extends BaseEntity {
@@ -14,4 +15,7 @@ export class Customer extends BaseEntity {
 
   @Column({ type: 'varchar', length: 255 })
   phone: string;
+
+  @OneToOne(() => User, (user) => user.customer, { nullable: true })
+  user: User;
 }

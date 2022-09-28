@@ -18,11 +18,14 @@ export class CustomerService {
   }
 
   findAll(): Promise<Customer[]> {
-    return this.customerRepository.find();
+    return this.customerRepository.find({ relations: ['user'] });
   }
 
   async findOne(id: number): Promise<Customer> {
-    const customer = await this.customerRepository.findOne({ where: { id } });
+    const customer = await this.customerRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
     if (!customer) {
       throw new NotFoundException(`Customer #${id} not found`);
     }
