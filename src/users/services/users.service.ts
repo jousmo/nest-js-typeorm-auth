@@ -43,7 +43,11 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const { customerId } = updateUserDto;
     const user = await this.findOne(id);
+    if (customerId) {
+      user.customer = await this.customerService.findOne(customerId);
+    }
     this.userRepository.merge(user, updateUserDto);
     return this.userRepository.save(user);
   }
