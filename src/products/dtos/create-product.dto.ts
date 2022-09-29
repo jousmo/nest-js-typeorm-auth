@@ -4,6 +4,8 @@ import {
   IsUrl,
   IsNotEmpty,
   IsPositive,
+  IsArray,
+  ArrayNotEmpty,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -31,4 +33,9 @@ export class CreateProductDto {
   @IsPositive()
   @IsNotEmpty()
   readonly brandId: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNumber({}, { each: true })
+  readonly categoriesIds: number[];
 }
