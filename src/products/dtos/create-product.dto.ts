@@ -27,4 +27,8 @@ export class CreateProductDto {
   @IsUrl()
   @IsNotEmpty()
   readonly image: string;
+
+  @IsPositive()
+  @IsNotEmpty()
+  readonly brandId: number;
 }
