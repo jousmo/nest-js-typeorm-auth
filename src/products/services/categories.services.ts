@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, In, Repository } from 'typeorm';
 import { CreateCategoryDto } from '../dtos/create-category.dto';
 import { UpdateCategoryDto } from '../dtos/update-category.dto';
 import { Category } from '../entities/category.entity';
@@ -18,12 +18,13 @@ export class CategoriesService {
   }
 
   findAll(): Promise<Category[]> {
-    return this.categoryRepository.find();
+    return this.categoryRepository.find({ relations: ['products'] });
   }
 
   async findOne(id: number): Promise<Category> {
     const category = await this.categoryRepository.findOne({
       where: { id },
+      relations: ['products'],
     });
     if (!category) {
       throw new NotFoundException(`Category #${id} not found`);
@@ -43,5 +44,9 @@ export class CategoriesService {
   async remove(id: number): Promise<DeleteResult> {
     await this.findOne(id);
     return this.categoryRepository.delete(id);
+  }
+
+  findByIds(ids: number[]): Promise<Category[]> {
+    return this.categoryRepository.findBy({ id: In(ids) });
   }
 }

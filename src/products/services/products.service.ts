@@ -5,29 +5,40 @@ import { CreateProductDto } from '../dtos/create-product.dto';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { Product } from '../entities/product.entity';
 import { BrandsService } from './brands.service';
+import { CategoriesService } from './categories.services';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly brandsServices: BrandsService,
+    private readonly categoriesServices: CategoriesService,
     @InjectRepository(Product) private productRepository: Repository<Product>,
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const { brandId } = createProductDto;
+    const { brandId, categoriesIds } = createProductDto;
     const newProduct = this.productRepository.create(createProductDto);
-    newProduct.brand = await this.brandsServices.findOne(brandId);
+    if (brandId) {
+      newProduct.brand = await this.brandsServices.findOne(brandId);
+    }
+
+    if (categoriesIds.length) {
+      newProduct.categories = await this.categoriesServices.findByIds(
+        categoriesIds,
+      );
+    }
+
     return this.productRepository.save(newProduct);
   }
 
   findAll(): Promise<Product[]> {
-    return this.productRepository.find({ relations: ['brand'] });
+    return this.productRepository.find({ relations: ['brand', 'categories'] });
   }
 
   async findOne(id: number): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id },
-      relations: ['brand'],
+      relations: ['brand', 'categories'],
     });
     if (!product) {
       throw new NotFoundException(`Product #${id} not found`);
