@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../globals/entities/base.entity';
 import { User } from './user.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Customer extends BaseEntity {
@@ -18,4 +25,7 @@ export class Customer extends BaseEntity {
 
   @OneToOne(() => User, (user) => user.customer, { nullable: true })
   user: User;
+
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 }
