@@ -6,12 +6,13 @@ import {
   ManyToMany,
   JoinTable,
   Index,
+  JoinColumn,
 } from 'typeorm';
 import { BaseEntity } from '../../globals/entities/base.entity';
 import { Brand } from './brand.entity';
 import { Category } from './category.entity';
 
-@Entity()
+@Entity({ name: 'products' })
 @Index(['price', 'stock'])
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -34,9 +35,14 @@ export class Product extends BaseEntity {
   image: string;
 
   @ManyToOne(() => Brand, (brand) => brand.products)
+  @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 
   @ManyToMany(() => Category, (categories) => categories.products)
-  @JoinTable()
+  @JoinTable({
+    name: 'products_categories',
+    joinColumn: { name: 'product_id' },
+    inverseJoinColumn: { name: 'category_id' },
+  })
   categories: Category[];
 }
