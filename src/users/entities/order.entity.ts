@@ -30,4 +30,18 @@ export class Order extends BaseEntity {
 
     return [];
   }
+
+  @Expose()
+  get total() {
+    if (this.items) {
+      return this.items
+        .filter((item) => !!item)
+        .reduce((prev, current) => {
+          const { product, quantity } = current;
+          const totalItem = product.price * quantity;
+          return prev + totalItem;
+        }, 0);
+    }
+    return 0;
+  }
 }
