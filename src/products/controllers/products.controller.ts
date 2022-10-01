@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
@@ -14,6 +15,7 @@ import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { Product } from '../entities/product.entity';
+import { FilterProductDto } from '../dtos/filter-product.dto';
 
 @ApiTags('products')
 @Controller('products')
@@ -30,8 +32,8 @@ export class ProductsController {
     summary: 'List products',
     description: 'List all products description',
   })
-  findAll(): Promise<Product[]> {
-    return this.productsService.findAll();
+  findAll(@Query() params: FilterProductDto): Promise<Product[]> {
+    return this.productsService.findAll(params);
   }
 
   @Get(':id')
