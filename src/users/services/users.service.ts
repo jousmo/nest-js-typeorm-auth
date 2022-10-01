@@ -7,13 +7,15 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
 import { Order } from '../entities/order.entity';
 import { ProductsService } from '../../products/services/products.service';
-import { CustomerService } from './customer.service';
+import { CustomersService } from './customers.service';
+import { OrdersService } from './orders.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly customerService: CustomerService,
+    private readonly customersService: CustomersService,
+    private readonly ordersService: OrdersService,
     @Inject('PG') private readonly pg: Client,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
@@ -22,7 +24,7 @@ export class UsersService {
     const { customerId } = createUserDto;
     const newUser = this.userRepository.create(createUserDto);
     if (customerId) {
-      newUser.customer = await this.customerService.findOne(customerId);
+      newUser.customer = await this.customersService.findOne(customerId);
     }
     return this.userRepository.save(newUser);
   }
@@ -46,7 +48,7 @@ export class UsersService {
     const { customerId } = updateUserDto;
     const user = await this.findOne(id);
     if (customerId) {
-      user.customer = await this.customerService.findOne(customerId);
+      user.customer = await this.customersService.findOne(customerId);
     }
     this.userRepository.merge(user, updateUserDto);
     return this.userRepository.save(user);
@@ -57,14 +59,14 @@ export class UsersService {
     return this.userRepository.delete(id);
   }
 
-  async findMyOrders(id: number): Promise<Order> {
+  async findMyOrders(id: number): Promise<Order[]> {
     const user = await this.findOne(id);
-    const products = await this.productsService.findAll();
-    return {
-      date: new Date(),
-      user,
-      products,
-    };
+    const { id: customerId } = user.customer;
+    if (!customerId) {
+      throw new NotFoundException(`User #${id} not customer found`);
+    }
+    const customer = await this.customersService.findOne(customerId);
+    return customer.orders;
   }
 
   async findQueryNow(): Promise<object> {

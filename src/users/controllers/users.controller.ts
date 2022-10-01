@@ -42,7 +42,7 @@ export class UsersController {
   }
 
   @Get(':id/orders')
-  findMyOrders(@Param('id', ParseIntPipe) id: number): Promise<Order> {
+  findMyOrders(@Param('id', ParseIntPipe) id: number): Promise<Order[]> {
     return this.usersService.findMyOrders(id);
   }
 
