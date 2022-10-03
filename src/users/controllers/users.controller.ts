@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
@@ -19,6 +20,7 @@ import { Order } from '../entities/order.entity';
 import { ApiKeyGuard } from '../../auth/guards/api-key.guard';
 
 @ApiTags('users')
+@UseGuards(ApiKeyGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -33,8 +35,8 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @UseGuards(ApiKeyGuard)
   @Get('/now')
+  @SetMetadata('isPublic', true)
   findQueryNow(): object {
     return this.usersService.findQueryNow();
   }
