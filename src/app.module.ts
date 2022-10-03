@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { GlobalsModule } from './globals/globals.module';
+import { AuthModule } from './auth/auth.module';
 import configuration from './configuration';
 
 @Module({
@@ -26,6 +27,7 @@ import configuration from './configuration';
     GlobalsModule,
     UsersModule,
     ProductsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
