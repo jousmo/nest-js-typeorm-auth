@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Client } from 'pg';
+import bcrypt from 'bcrypt';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
@@ -21,8 +22,10 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { customerId } = createUserDto;
+    const { customerId, password } = createUserDto;
+    const hashPassword = await bcrypt.hash(password, 10);
     const newUser = this.userRepository.create(createUserDto);
+    newUser.password = hashPassword;
     if (customerId) {
       newUser.customer = await this.customersService.findOne(customerId);
     }
@@ -72,5 +75,9 @@ export class UsersService {
   async findQueryNow(): Promise<object> {
     const { rows } = await this.pg.query('SELECT NOW() AS now');
     return rows[0];
+  }
+
+  findByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({ where: { email } });
   }
 }

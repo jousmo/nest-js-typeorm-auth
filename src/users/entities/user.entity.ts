@@ -5,6 +5,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../../globals/entities/base.entity';
 import { Customer } from './customer.entity';
 
@@ -13,9 +14,10 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
