@@ -21,4 +21,5 @@ export default registerAs('configuration', () => ({
     synchronize: environment !== 'production',
     autoLoadEntities: environment !== 'production',
   },
+  apiKey: process.env.API_KEY,
 }));
