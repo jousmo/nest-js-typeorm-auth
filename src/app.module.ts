@@ -23,6 +23,8 @@ import configuration from './configuration';
         DB_HOST: Joi.string().required(),
         DB_DIALECT: Joi.string().required(),
         API_KEY: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRED: Joi.string().required(),
       }),
     }),
     GlobalsModule,

@@ -22,4 +22,6 @@ export default registerAs('configuration', () => ({
     autoLoadEntities: environment !== 'production',
   },
   apiKey: process.env.API_KEY,
+  jwtSecret: process.env.JWT_SECRET,
+  jwtExpired: process.env.JWT_EXPIRED,
 }));
