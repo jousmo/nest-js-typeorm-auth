@@ -68,4 +68,14 @@ export class OrdersService {
     await this.findOne(id);
     return this.orderRepository.delete(id);
   }
+
+  ordersByCustomer(customerId: number) {
+    return this.orderRepository.find({
+      where: {
+        customer: {
+          id: customerId,
+        },
+      },
+    });
+  }
 }

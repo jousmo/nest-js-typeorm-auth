@@ -13,6 +13,7 @@ import { OrdersController } from './controllers/orders.controller';
 import { OrdersService } from './services/orders.service';
 import { OrderItemController } from './controllers/orders-items.controller';
 import { OrdersItemsService } from './services/orders-items.service';
+import { ProfileController } from './controllers/profile.controller';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { OrdersItemsService } from './services/orders-items.service';
     CustomersController,
     OrdersController,
     OrderItemController,
+    ProfileController,
   ],
   providers: [
     UsersService,
